@@ -18,7 +18,7 @@ db.mycollection.createIndex({ city: 1, age: 1 })
 
 
 
-db.mycollection.createIndex({ name: 1 }, { unique: true })
+db.mycollection.createIndex({ name: 2 }, { unique: true })
 
 db.mycollection.getIndexes()
 
