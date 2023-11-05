@@ -1,0 +1,75 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class EmployeeManagement {
+    public static void main(String[] args) {
+        // Define your database connection details
+        String jdbcURL = "jdbc:mysql://localhost:3306/your_database_name";
+        String username = "your_username";
+        String password = "your_password";
+
+        try {
+            // Create a database connection
+            Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+
+            // Task 1: Create a table of employee details
+            Statement createTableStatement = connection.createStatement();
+            String createTableSQL = "CREATE TABLE Employee (" +
+                    "SSN VARCHAR(10) PRIMARY KEY, " +
+                    "Ename VARCHAR(50), " +
+                    "state VARCHAR(2), " +
+                    "salary DECIMAL(10, 2))";
+            createTableStatement.execute(createTableSQL);
+            createTableStatement.close();
+
+            // Task 2: Insert records into the Employee table
+            String insertSQL = "INSERT INTO Employee (SSN, Ename, state, salary) VALUES (?, ?, ?, ?";
+            PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
+            insertStatement.setString(1, "123-45-6789");
+            insertStatement.setString(2, "John Doe");
+            insertStatement.setString(3, "MH");
+            insertStatement.setDouble(4, 50000.00);
+            insertStatement.executeUpdate();
+            insertStatement.close();
+
+            // Task 3: Retrieve details based on SSN
+            String retrieveSQL = "SELECT * FROM Employee WHERE SSN = ?";
+            PreparedStatement retrieveStatement = connection.prepareStatement(retrieveSQL);
+            retrieveStatement.setString(1, "123-45-6789");
+            ResultSet resultSet = retrieveStatement.executeQuery();
+            while (resultSet.next()) {
+                String ssn = resultSet.getString("SSN");
+                String ename = resultSet.getString("Ename");
+                String state = resultSet.getString("state");
+                double salary = resultSet.getDouble("salary");
+                System.out.println("SSN: " + ssn + ", Ename: " + ename + ", State: " + state + ", Salary: " + salary);
+            }
+            retrieveStatement.close();
+
+            // Task 4: Update employee state from 'MH' to 'TN'
+            String updateSQL = "UPDATE Employee SET state = ? WHERE SSN = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
+            updateStatement.setString(1, "TN");
+            updateStatement.setString(2, "123-45-6789");
+            updateStatement.executeUpdate();
+            updateStatement.close();
+
+            // Task 5: Delete all employees from 'Gujarat'
+            String deleteSQL = "DELETE FROM Employee WHERE state = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteSQL);
+            deleteStatement.setString(1, "Gujarat");
+            deleteStatement.executeUpdate();
+            deleteStatement.close();
+
+            // Close the database connection
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
