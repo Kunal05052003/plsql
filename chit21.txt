@@ -1,6 +1,6 @@
 use new1 
 db.createCollection("orderinfo")
- db.orderinfo.insert([{ cust_id:123,cust_name:"abc",status:"A",price:25
+ db.orderinfo.insert([{ cust_id:123,cust_name:"abc",status:"A",price:25},])
  db.orderinfo.updateMany({}, { $set: { Age: null } });
  db.orderinfo.find()
 
