@@ -74,3 +74,47 @@ WHERE Amount = (SELECT MIN(Amount) FROM Account WHERE Acc_Type = a.Acc_Type);
 SELECT C_id,Acc_Type, Amount
 FROM Account
 WHERE Amount > (SELECT MAX(Amount) FROM Account WHERE Acc_Type = 'Saving');
+
+
+
+
+
+
+-- create database bank;
+-- use bank;
+
+create table customer(c_id int auto_increment primary key, cname varchar(100),city varchar(100));
+create table account(c_id int, acc_type varchar(100),amount int);
+
+insert into customer(c_id, cname, city)
+values(1,'John','Nashik'),(2,'Seema','Aurangabad'),(3,'Amita','Nagar'),(4,'Rakesh','Pune'),(5,'Samata','Nashik'),(6,'Ankita','Chandwad'),(7,'Bhavika','Pune'),(8,'Deepa','Mumbai'),(9,'Nitin','Nagpur'),(10,'Pooja','Pune');
+
+insert into account(c_id,acc_type,amount)
+values(1,'Current',5000),(2,'Saving',20000),(3,'Saving',70000),(4,'Saving',50000),(5,'Current',35000),(6,'Loan',30000),(7,'Saving',50000),(8,'Saving',90000),(9,'Loan',8000),(10,'Current',45000);
+
+-- select * from customer;
+-- select * from account;
+
+-- Show the cname, Acc_Type, amount information of customer who is having an saving account.
+//select cname,acc_type,amount from customer join account on customer.c_id = account.c_id where acc_type="Saving";
+
+-- Display the data using Natural, left and right join.
+select * from customer join account on customer.c_id=account.c_id;
+select * from customer left join account on customer.c_id=account.c_id;
+select * from customer right join account on customer.c_id=account.c_id;
+
+-- Display the information of customers living in the same city as of ‘pooja’.
+select * from customer where city=(select city from customer where cname='Pooja');
+
+-- Display the information of account, having less amount than average amount throughout the bank.
+select * from account where amount<(select avg(amount)from account);
+
+-- Display the information of account, having less amount than average amount throughout the bank.
+select c_id from account where amount=(select max(amount)from account);
+
+--  Display the amount and acc_type of those customers whose amount is the minimum amount of that Acc_type.
+select amount,acc_type from account group by acc_type having amount = min(amount);
+
+-- Display the amount of those accounts whose amount is higher than amount of any saving account amount
+select amount from account where amount>(select min(amount)from account where acc_type='Saving');
+select min(amount) from account group by acc_type;
